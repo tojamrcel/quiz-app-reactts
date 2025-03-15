@@ -1,9 +1,28 @@
 /* eslint-disable react-refresh/only-export-components */
-import { createContext, useContext, useEffect, useReducer } from "react"
-import { useLocalStorage } from "../hooks/useLocalStorage"
+import {
+    createContext,
+    ReactNode,
+    useContext,
+    useEffect,
+    useReducer,
+} from "react"
 import toast from "react-hot-toast"
+import { useLocalStorage } from "../hooks/useLocalStorage"
 
-const QuizzesContext = createContext()
+interface QuizzesContextType {
+    status: State["status"]
+    quizzes: State["quizzes"]
+    error: State["error"]
+    activeQuiz: State["activeQuiz"]
+    startQuiz: (quiz: Quiz) => void
+    stopQuiz: () => void
+    dispatch: React.Dispatch<Action>
+    createQuiz: (quiz: Quiz) => Promise<void>
+    deleteQuiz: (quizId: number) => Promise<void>
+    editQuiz: (quiz: Quiz) => Promise<void>
+}
+
+const QuizzesContext = createContext<QuizzesContextType | undefined>(undefined)
 
 const quizzesArray = [
     {
@@ -302,10 +321,46 @@ const quizzesArray = [
     },
 ]
 
-const initialState = {
+interface Question {
+    question: string
+    answers: string[]
+    correctAnswer: number
+}
+
+interface Quiz {
+    id: number
+    title: string
+    author: string | undefined
+    description: string
+    questions: Question[]
+}
+
+interface State {
+    status: "loading" | "ready" | "active" | "finished"
+    quizzes: []
+    error: string
+    activeQuiz: {
+        id: number | null
+        corrects: number
+        currentQuestion: number
+        answer: number | null
+        correctAnswer: number | null
+        questions: []
+    }
+}
+
+interface Action {
+    type: string
+    payload?:
+        | Quiz
+        | string
+        | number
+        | { id: number; questions: Question[]; correctAnswer: number }
+}
+
+const initialState: State = {
     // can be also ready, active, finished
     status: "loading",
-    // in final version quizzes are going to be taken from quizzes array, to store quizzes created by user i'm going to use local storage.
     quizzes: [],
     error: "",
     activeQuiz: {
@@ -318,7 +373,7 @@ const initialState = {
     },
 }
 
-function reducer(state, action) {
+function reducer(state: State, action: Action) {
     switch (action.type) {
         case "dataReceived":
             return {
@@ -335,12 +390,12 @@ function reducer(state, action) {
                 status: "active",
                 activeQuiz: {
                     ...state.activeQuiz,
-                    id: action.payload.id,
+                    id: action?.payload?.id,
                     currentQuestion: 0,
                     answer: null,
                     corrects: 0,
-                    questions: action.payload.questions,
-                    correctAnswer: action.payload.correctAnswer,
+                    questions: action?.payload?.questions,
+                    correctAnswer: action?.payload?.correctAnswer,
                 },
             }
         case "newAnswer":
@@ -404,16 +459,18 @@ function reducer(state, action) {
                 ...state,
                 quizzes: [
                     ...state.quizzes.filter(
-                        (quiz) => quiz.id !== action.payload.id,
+                        (quiz: Quiz) => quiz.id !== action.payload.id,
                     ),
                     action.payload,
                 ].sort((a, b) => a.id - b.id),
             }
         }
+        default:
+            return { ...state }
     }
 }
 
-function QuizzesProvider({ children }) {
+function QuizzesProvider({ children }: { children: ReactNode }) {
     const [{ status, activeQuiz, quizzes, error }, dispatch] = useReducer(
         reducer,
         initialState,
@@ -436,13 +493,13 @@ function QuizzesProvider({ children }) {
         [localQuizzes],
     )
 
-    function startQuiz(quiz) {
+    function startQuiz(quiz: Quiz) {
         dispatch({
             type: "startQuiz",
             payload: {
                 id: +quiz.id,
                 questions: quiz.questions,
-                correctAnswer: quiz.questions.at(0).correctAnswer,
+                correctAnswer: quiz.questions[0].correctAnswer,
             },
         })
     }
@@ -465,7 +522,7 @@ function QuizzesProvider({ children }) {
             )
     } */
 
-    async function createQuiz(quiz) {
+    async function createQuiz(quiz: Quiz) {
         try {
             // const res = await fetch("http://localhost:8000/quizzes", {
             //     method: "POST",
@@ -482,12 +539,14 @@ function QuizzesProvider({ children }) {
             setLocalQuizzes([...quizzes, quiz])
             toast.success("Quiz successfully created.")
         } catch (err) {
-            toast.error("Couldn't create new quiz.")
-            throw new Error(err.message)
+            if (err instanceof Error) {
+                toast.error("Couldn't create new quiz.")
+                throw new Error(err.message)
+            }
         }
     }
 
-    async function deleteQuiz(quizId) {
+    async function deleteQuiz(quizId: number) {
         try {
             // const res = await fetch(`http://localhost:8000/quizzes/${quizId}`, {
             //     method: "DELETE",
@@ -499,15 +558,17 @@ function QuizzesProvider({ children }) {
             // const data = await res.json()
             // fetchQuizzes()
             // return data
-            setLocalQuizzes(quizzes.filter((quiz) => quiz.id !== quizId))
+            setLocalQuizzes(quizzes.filter((quiz: Quiz) => quiz.id !== quizId))
             toast.success("Quiz successfully deleted.")
         } catch (err) {
-            toast.error("Couldn't delete quiz.")
-            throw new Error(err.message)
+            if (err instanceof Error) {
+                toast.error("Couldn't delete quiz.")
+                throw new Error(err.message)
+            }
         }
     }
 
-    async function editQuiz(quiz) {
+    async function editQuiz(quiz: Quiz) {
         try {
             // const res = await fetch(
             //     `http://localhost:8000/quizzes/${quiz.id}`,
@@ -524,14 +585,16 @@ function QuizzesProvider({ children }) {
             // fetchQuizzes()
             // return data
             setLocalQuizzes(
-                [...quizzes.filter((q) => q.id !== quiz.id), quiz].sort(
+                [...quizzes.filter((q: Quiz) => q.id !== quiz.id), quiz].sort(
                     (a, b) => a.id - b.id,
                 ),
             )
             toast.success("Quiz successfully edited.")
         } catch (err) {
-            toast.error("Couldn't edit quiz.")
-            throw new Error(err.message)
+            if (err instanceof Error) {
+                toast.error("Couldn't edit quiz.")
+                throw new Error(err.message)
+            }
         }
     }
 
