@@ -1,5 +1,5 @@
 import { useEffect, useRef } from "react"
-import Input from "../../ui/Input"
+import Input from "../../ui/Input.tsx"
 import { useWatch } from "react-hook-form"
 
 function QuestionForm({

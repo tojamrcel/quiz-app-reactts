@@ -1,4 +1,4 @@
-import QuizResult from "../features/result/QuizResult"
+import QuizResult from "../features/result/QuizResult.tsx"
 
 function Result() {
     return (

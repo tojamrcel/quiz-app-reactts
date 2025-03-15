@@ -1,7 +1,7 @@
 import { useForm } from "react-hook-form"
-import Button from "../../ui/Button"
-import Input from "../../ui/Input"
-import QuestionForm from "./QuestionForm"
+import Button from "../../ui/Button.tsx"
+import Input from "../../ui/Input.tsx"
+import QuestionForm from "./QuestionForm.tsx"
 import { useState } from "react"
 import { useQuizzes } from "../../contexts/QuizzesContext"
 

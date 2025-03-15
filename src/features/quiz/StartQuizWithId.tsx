@@ -1,5 +1,5 @@
 import { useQuizzes } from "../../contexts/QuizzesContext"
-import Button from "../../ui/Button"
+import Button from "../../ui/Button.tsx"
 
 function StartQuizWithId({ quiz }) {
     const { startQuiz } = useQuizzes()

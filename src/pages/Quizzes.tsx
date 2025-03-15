@@ -1,4 +1,4 @@
-import QuizzesList from "../features/quizzes/QuizzesList"
+import QuizzesList from "../features/quizzes/QuizzesList.tsx"
 
 function Quizzes() {
     return (

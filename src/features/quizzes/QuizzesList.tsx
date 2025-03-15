@@ -1,9 +1,9 @@
 import { useQuizzes } from "../../contexts/QuizzesContext"
-import Button from "../../ui/Button"
+import Button from "../../ui/Button.tsx"
 import QuizItem from "./QuizItem"
-import Spinner from "../../ui/Spinner"
-import Menus from "../../ui/Menus"
-import Modal from "../../ui/Modal"
+import Spinner from "../../ui/Spinner.tsx"
+import Menus from "../../ui/Menus.tsx"
+import Modal from "../../ui/Modal.tsx"
 import CreateQuizForm from "../quiz/CreateQuizForm"
 
 function QuizzesList() {

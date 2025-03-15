@@ -1,10 +1,10 @@
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
-import AppLayout from "./ui/AppLayout";
-import Quizzes from "./pages/Quizzes";
-import Quiz from "./pages/Quiz";
-import Result from "./pages/Result";
-import ProtectedRoute from "./ui/ProtectedRoute";
-import PageNotFound from "./pages/PageNotFound";
+import AppLayout from "./ui/AppLayout.tsx";
+import Quizzes from "./pages/Quizzes.tsx";
+import Quiz from "./pages/Quiz.tsx";
+import Result from "./pages/Result.tsx";
+import ProtectedRoute from "./ui/ProtectedRoute.tsx";
+import PageNotFound from "./pages/PageNotFound.tsx";
 import { Toaster } from "react-hot-toast";
 
 function App() {

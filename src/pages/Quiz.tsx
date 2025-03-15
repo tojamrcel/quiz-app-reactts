@@ -1,4 +1,4 @@
-import ActiveQuiz from "../features/quiz/ActiveQuiz"
+import ActiveQuiz from "../features/quiz/ActiveQuiz.tsx"
 
 function Quiz() {
     return (

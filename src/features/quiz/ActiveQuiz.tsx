@@ -1,11 +1,11 @@
 import { useState } from "react"
 import { Navigate, useNavigate, useParams } from "react-router-dom"
 import { useQuizzes } from "../../contexts/QuizzesContext"
-import AnswerItem from "./AnswerItem"
-import StartQuizWithId from "./StartQuizWithId"
-import Spinner from "../../ui/Spinner"
-import Button from "../../ui/Button"
-import Error from "../../ui/Error"
+import AnswerItem from "./AnswerItem.tsx"
+import StartQuizWithId from "./StartQuizWithId.tsx"
+import Spinner from "../../ui/Spinner.tsx"
+import Button from "../../ui/Button.tsx"
+import Error from "../../ui/Error.tsx"
 
 function ActiveQuiz() {
     const navigate = useNavigate()

@@ -1,10 +1,10 @@
 import { useNavigate } from "react-router-dom"
 import { useQuizzes } from "../../contexts/QuizzesContext"
 import { HiPencil, HiTrash } from "react-icons/hi2"
-import Menus, { useMenus } from "../../ui/Menus"
-import Modal from "../../ui/Modal"
-import ConfirmDelete from "../../ui/ConfirmDelete"
-import CreateQuizForm from "../quiz/CreateQuizForm"
+import Menus, { useMenus } from "../../ui/Menus.tsx"
+import Modal from "../../ui/Modal.tsx"
+import ConfirmDelete from "../../ui/ConfirmDelete.tsx"
+import CreateQuizForm from "../quiz/CreateQuizForm.tsx"
 
 function QuizItem({ quiz }) {
     const { openId } = useMenus()

@@ -1,6 +1,6 @@
 import { useNavigate } from "react-router-dom"
 import { useQuizzes } from "../../contexts/QuizzesContext"
-import Button from "../../ui/Button"
+import Button from "../../ui/Button.tsx"
 
 function QuizResult() {
     const navigate = useNavigate()
