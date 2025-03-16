@@ -336,16 +336,16 @@ interface Quiz {
 }
 
 interface State {
-    status: "loading" | "ready" | "active" | "finished"
-    quizzes: []
-    error: string
+    status: "loading" | "ready" | "active" | "finished" | "error"
+    quizzes: Quiz[]
+    error: string | undefined
     activeQuiz: {
         id: number | null
         corrects: number
         currentQuestion: number
         answer: number | null
         correctAnswer: number | null
-        questions: []
+        questions: Question[]
     }
 }
 
@@ -353,9 +353,10 @@ interface Action {
     type: string
     payload?:
         | Quiz
-        | string
         | number
         | { id: number; questions: Question[]; correctAnswer: number }
+        | string
+        | Quiz[]
 }
 
 const initialState: State = {
@@ -373,37 +374,54 @@ const initialState: State = {
     },
 }
 
-function reducer(state: State, action: Action) {
+function reducer(state: State, action: Action): State {
     switch (action.type) {
         case "dataReceived":
             return {
                 ...state,
                 status: "ready",
                 error: "",
-                quizzes: action.payload,
+                quizzes: Array.isArray(action.payload) ? action.payload : [],
             }
         case "dataFailed":
-            return { ...state, status: "error", error: action.payload }
-        case "startQuiz":
             return {
                 ...state,
-                status: "active",
-                activeQuiz: {
-                    ...state.activeQuiz,
-                    id: action?.payload?.id,
-                    currentQuestion: 0,
-                    answer: null,
-                    corrects: 0,
-                    questions: action?.payload?.questions,
-                    correctAnswer: action?.payload?.correctAnswer,
-                },
+                status: "error",
+                error:
+                    typeof action.payload === "string"
+                        ? action.payload
+                        : undefined,
             }
+        case "startQuiz":
+            if (
+                typeof action.payload === "object" &&
+                "id" in action.payload &&
+                "questions" in action.payload &&
+                "correctAnswer" in action.payload
+            )
+                return {
+                    ...state,
+                    status: "active",
+                    activeQuiz: {
+                        ...state.activeQuiz,
+                        id: action?.payload?.id,
+                        currentQuestion: 0,
+                        answer: null,
+                        corrects: 0,
+                        questions: action?.payload?.questions,
+                        correctAnswer: action?.payload?.correctAnswer,
+                    },
+                }
+            else return state
         case "newAnswer":
             return {
                 ...state,
                 activeQuiz: {
                     ...state.activeQuiz,
-                    answer: action.payload,
+                    answer:
+                        typeof action.payload === "number"
+                            ? action.payload
+                            : null,
                     corrects:
                         state.activeQuiz.correctAnswer === action.payload
                             ? state.activeQuiz.corrects + 1
@@ -417,7 +435,10 @@ function reducer(state: State, action: Action) {
                     ...state.activeQuiz,
                     currentQuestion: state.activeQuiz.currentQuestion + 1,
                     answer: null,
-                    correctAnswer: action.payload,
+                    correctAnswer:
+                        typeof action.payload === "number"
+                            ? action.payload
+                            : null,
                 },
             }
         case "finishQuiz":
@@ -441,30 +462,19 @@ function reducer(state: State, action: Action) {
                 },
             }
         case "restartQuiz":
-            return {
-                ...state,
-                activeQuiz: {
-                    ...state.activeQuiz,
-                    corrects: 0,
-                    currentQuestion: 0,
-                    answer: null,
-                    correctAnswer:
-                        state.activeQuiz.questions.at(0).correctAnswer,
-                },
-            }
-
-        //  CASE editQuiz IS USED ONLY FOR NO API VERSION OF APP
-        case "editQuiz": {
-            return {
-                ...state,
-                quizzes: [
-                    ...state.quizzes.filter(
-                        (quiz: Quiz) => quiz.id !== action.payload.id,
-                    ),
-                    action.payload,
-                ].sort((a, b) => a.id - b.id),
-            }
-        }
+            if (state && state.activeQuiz && state.activeQuiz.questions)
+                return {
+                    ...state,
+                    activeQuiz: {
+                        ...state.activeQuiz,
+                        corrects: 0,
+                        currentQuestion: 0,
+                        answer: null,
+                        correctAnswer:
+                            state.activeQuiz.questions[0].correctAnswer,
+                    },
+                }
+            else return state
         default:
             return { ...state }
     }
@@ -483,7 +493,7 @@ function QuizzesProvider({ children }: { children: ReactNode }) {
 
     useEffect(
         function () {
-            // fetchQuizzes()
+            // fetchQuizzes() as "active"
             dispatch({
                 type: "dataReceived",
                 payload:
