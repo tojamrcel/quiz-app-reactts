@@ -1,6 +1,20 @@
 import { useQuizzes } from "../../contexts/QuizzesContext"
 
-function AnswerItem({ index, answer, onClick, active, disabled }) {
+interface AnswerItemProps {
+    index: number
+    answer: string
+    onClick: (index: number) => void
+    active: boolean
+    disabled: boolean
+}
+
+function AnswerItem({
+    index,
+    answer,
+    onClick,
+    active,
+    disabled,
+}: AnswerItemProps) {
     const { activeQuiz } = useQuizzes()
     const { correctAnswer, answer: answered } = activeQuiz
     const classStr =
