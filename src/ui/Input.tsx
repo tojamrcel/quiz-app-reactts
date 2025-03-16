@@ -1,4 +1,18 @@
-function Input({ variation, register, maxChar = 64, defaultValue = "" }) {
+import { UseFormRegisterReturn } from "react-hook-form"
+
+interface InputProps {
+    variation?: "sm" | "normal"
+    register: UseFormRegisterReturn
+    maxChar?: number
+    defaultValue?: string
+}
+
+function Input({
+    variation,
+    register,
+    maxChar = 64,
+    defaultValue = "",
+}: InputProps) {
     if (variation === "sm")
         return (
             <input

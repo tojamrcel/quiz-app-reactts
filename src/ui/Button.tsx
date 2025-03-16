@@ -1,7 +1,7 @@
 import { ReactNode } from "react"
 
 interface ButtonProps {
-    onClick: () => void
+    onClick?: () => void
     type?: "wide" | "full-width" | "default"
     children: ReactNode
     disabled?: boolean

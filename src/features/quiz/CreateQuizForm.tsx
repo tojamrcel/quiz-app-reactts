@@ -4,8 +4,14 @@ import Input from "../../ui/Input.tsx"
 import QuestionForm from "./QuestionForm.tsx"
 import { useState } from "react"
 import { useQuizzes } from "../../contexts/QuizzesContext"
+import { Question, Quiz } from "../../types/types.ts"
 
-function CreateQuizForm({ onCloseModal, quiz }) {
+interface CreateQuizFormProps {
+    onCloseModal: () => void
+    quiz: Quiz
+}
+
+function CreateQuizForm({ onCloseModal, quiz }: CreateQuizFormProps) {
     const { handleSubmit, register, getValues, setValue, formState, control } =
         useForm()
 
@@ -21,27 +27,27 @@ function CreateQuizForm({ onCloseModal, quiz }) {
     function onSubmit() {
         const values = getValues()
         const numArr = Array.from({ length: questions }, (_, i) => i)
-        const id = Date.now() + ""
-        const newQuizQuestions = []
+        const id = Date.now()
+        const newQuizQuestions: Question[] = []
 
         numArr.forEach((i) => {
-            const question = {
+            const question: Question = {
                 question: "",
                 answers: [],
-                correctAnswer: null,
+                correctAnswer: 0,
             }
 
             Object.entries(values).map((p) => {
                 if (p[0][0] === String(i)) {
-                    p[0].split("-")[1] === "answer"
-                        ? (question.answers = [...question.answers, p[1]])
-                        : null
-                    p[0].split("-")[1] === "question"
-                        ? (question.question = p[1])
-                        : null
-                    p[0].split("-")[1] === "correctAnswer"
-                        ? (question.correctAnswer = +p[1])
-                        : null
+                    if (p[0].split("-")[1] === "answer") {
+                        question.answers = [...question.answers, p[1]]
+                    }
+                    if (p[0].split("-")[1] === "question") {
+                        question.question = p[1]
+                    }
+                    if (p[0].split("-")[1] === "correctAnswer") {
+                        question.correctAnswer = +p[1]
+                    }
                 }
             })
 
@@ -61,7 +67,7 @@ function CreateQuizForm({ onCloseModal, quiz }) {
         }
 
         if (!isEditing) {
-            const newQuiz = {
+            const newQuiz: Quiz = {
                 id,
                 description: values.description,
                 title: values.title,
@@ -107,7 +113,8 @@ function CreateQuizForm({ onCloseModal, quiz }) {
                         })}
                     />
                     <div className="-my-1 h-3">
-                        {errors?.title?.message ? (
+                        {errors?.title &&
+                        typeof errors.title.message === "string" ? (
                             <span className="text-sm text-red-800">
                                 {errors?.title?.message}
                             </span>
@@ -145,7 +152,8 @@ function CreateQuizForm({ onCloseModal, quiz }) {
                         })}
                     />
                     <div className="-my-1 h-3">
-                        {errors?.description?.message ? (
+                        {errors?.description &&
+                        typeof errors.description.message === "string" ? (
                             <span className="text-sm text-red-800">
                                 {errors?.description?.message}
                             </span>
@@ -154,9 +162,7 @@ function CreateQuizForm({ onCloseModal, quiz }) {
                 </div>
                 <div className="flex flex-col gap-1.5">
                     <div className="flex items-center justify-between">
-                        <h2 className="text-xl" htmlFor="author">
-                            Questions
-                        </h2>
+                        <h2 className="text-xl">Questions</h2>
                         <button
                             onClick={addQuestion}
                             type="button"
@@ -170,7 +176,7 @@ function CreateQuizForm({ onCloseModal, quiz }) {
                             (_, i) => (
                                 <QuestionForm
                                     question={
-                                        isEditing ? quiz.questions[i] : ""
+                                        isEditing ? quiz.questions[i] : null
                                     }
                                     control={control}
                                     key={i}

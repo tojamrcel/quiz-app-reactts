@@ -1,9 +1,28 @@
 import { useEffect, useRef } from "react"
 import Input from "../../ui/Input.tsx"
-import { useWatch } from "react-hook-form"
+import {
+    UseFormGetValues,
+    UseFormRegister,
+    UseFormSetValue,
+    UseFormStateProps,
+    useWatch,
+} from "react-hook-form"
+import { Question } from "../../types/types.ts"
+
+interface QuestionFormProps {
+    question: Question | null
+    questionNum: number
+    register: any
+    errors: any
+    handleDelete: () => void
+    numOfQuestions: number
+    setValue: UseFormSetValue
+    control: any
+    getValues: UseFormGetValues
+}
 
 function QuestionForm({
-    question = "",
+    question,
     questionNum,
     register,
     errors,
@@ -12,7 +31,7 @@ function QuestionForm({
     setValue,
     control,
     getValues,
-}) {
+}: QuestionFormProps) {
     const ref = useRef()
     const answerFieldNames = [
         `${questionNum}-answer-0`,
