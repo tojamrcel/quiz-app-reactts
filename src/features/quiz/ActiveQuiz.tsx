@@ -16,12 +16,12 @@ function ActiveQuiz() {
     const [isRestarting, setIsRestarting] = useState(false)
 
     const { currentQuestion, questions, answer } = activeQuiz
-    const question = questions?.at(currentQuestion)
+    const question = questions[currentQuestion]
     const quizById = !activeQuiz.id
-        ? quizzes.find((quiz) => +quiz.id === +quizId)
+        ? quizzes.find((quiz) => (quizId ? +quiz.id === +quizId : null))
         : null
 
-    function handleClick(userAnswerIndex) {
+    function handleClick(userAnswerIndex: number) {
         if (answer !== null || isRestarting) return
         dispatch({ type: "newAnswer", payload: userAnswerIndex })
         setSeconds(3)
@@ -41,7 +41,7 @@ function ActiveQuiz() {
             else
                 dispatch({
                     type: "nextQuestion",
-                    payload: questions?.at(currentQuestion + 1).correctAnswer,
+                    payload: questions[currentQuestion + 1].correctAnswer,
                 })
         }, 3000)
     }

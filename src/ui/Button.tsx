@@ -1,4 +1,13 @@
-function Button({ onClick, type, children, disabled }) {
+import { ReactNode } from "react"
+
+interface ButtonProps {
+    onClick: () => void
+    type?: "wide" | "full-width" | "default"
+    children: ReactNode
+    disabled?: boolean
+}
+
+function Button({ onClick, type, children, disabled }: ButtonProps) {
     if (type === "wide")
         return (
             <button

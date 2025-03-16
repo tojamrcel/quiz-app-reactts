@@ -1,4 +1,6 @@
 /* eslint-disable react-refresh/only-export-components */
+
+import { Quiz, Action, State } from "../types/types"
 import {
     createContext,
     ReactNode,
@@ -320,44 +322,6 @@ const quizzesArray = [
         ],
     },
 ]
-
-interface Question {
-    question: string
-    answers: string[]
-    correctAnswer: number
-}
-
-interface Quiz {
-    id: number
-    title: string
-    author: string | undefined
-    description: string
-    questions: Question[]
-}
-
-interface State {
-    status: "loading" | "ready" | "active" | "finished" | "error"
-    quizzes: Quiz[]
-    error: string | undefined
-    activeQuiz: {
-        id: number | null
-        corrects: number
-        currentQuestion: number
-        answer: number | null
-        correctAnswer: number | null
-        questions: Question[]
-    }
-}
-
-interface Action {
-    type: string
-    payload?:
-        | Quiz
-        | number
-        | { id: number; questions: Question[]; correctAnswer: number }
-        | string
-        | Quiz[]
-}
 
 const initialState: State = {
     // can be also ready, active, finished
