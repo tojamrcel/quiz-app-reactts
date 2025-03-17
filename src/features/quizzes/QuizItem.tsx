@@ -8,7 +8,7 @@ import CreateQuizForm from "../quiz/CreateQuizForm.tsx"
 import { Quiz } from "../../types/types.ts"
 
 function QuizItem({ quiz }: { quiz: Quiz }) {
-    const { openIqd } = useMenus()!
+    const { openId } = useMenus()!
     const { startQuiz, deleteQuiz } = useQuizzes()
     const navigate = useNavigate()
 
