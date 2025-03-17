@@ -1,10 +1,12 @@
 import { useEffect, useRef } from "react"
 import Input from "../../ui/Input.tsx"
 import {
+    Control,
+    FieldErrors,
+    FieldValues,
     UseFormGetValues,
     UseFormRegister,
     UseFormSetValue,
-    UseFormStateProps,
     useWatch,
 } from "react-hook-form"
 import { Question } from "../../types/types.ts"
@@ -12,13 +14,13 @@ import { Question } from "../../types/types.ts"
 interface QuestionFormProps {
     question: Question | null
     questionNum: number
-    register: any
-    errors: any
+    register: UseFormRegister<FieldValues>
+    errors: FieldErrors
     handleDelete: () => void
     numOfQuestions: number
-    setValue: UseFormSetValue
-    control: any
-    getValues: UseFormGetValues
+    setValue: UseFormSetValue<FieldValues>
+    control: Control
+    getValues: UseFormGetValues<FieldValues>
 }
 
 function QuestionForm({
@@ -32,7 +34,7 @@ function QuestionForm({
     control,
     getValues,
 }: QuestionFormProps) {
-    const ref = useRef()
+    const ref = useRef<HTMLLIElement>(null)
     const answerFieldNames = [
         `${questionNum}-answer-0`,
         `${questionNum}-answer-1`,
@@ -47,12 +49,12 @@ function QuestionForm({
     useEffect(
         function () {
             if (question || numOfQuestions === 1) return
-            ref.current.scrollIntoView({ behavior: "smooth" })
+            ref.current?.scrollIntoView({ behavior: "smooth" })
         },
         [question, numOfQuestions],
     )
 
-    function isUniqueValidation(numField, value) {
+    function isUniqueValidation(numField: number, value: string) {
         const answers = answerFieldNames.map((name) => getValues(name))
 
         const validatedArr = answers.map((ans, i) => {
@@ -102,7 +104,9 @@ function QuestionForm({
                 <div className="-my-1 mb-4 h-2">
                     {errors[`${questionNum}-question`]?.message ? (
                         <span className="text-sm text-red-800">
-                            {errors[`${questionNum}-question`].message}
+                            {errors[
+                                `${questionNum}-question`
+                            ]?.message?.toString()}
                         </span>
                     ) : null}
                 </div>
@@ -123,7 +127,9 @@ function QuestionForm({
                     <div className="-my-1 mb-4 h-2">
                         {errors[`${questionNum}-answer-0`]?.message ? (
                             <span className="text-sm text-red-800">
-                                {errors[`${questionNum}-answer-0`].message}
+                                {errors[
+                                    `${questionNum}-answer-0`
+                                ]?.message?.toString()}
                             </span>
                         ) : null}
                     </div>
@@ -142,7 +148,9 @@ function QuestionForm({
                     <div className="-my-1 mb-4 h-2">
                         {errors[`${questionNum}-answer-1`]?.message ? (
                             <span className="text-sm text-red-800">
-                                {errors[`${questionNum}-answer-1`].message}
+                                {errors[
+                                    `${questionNum}-answer-1`
+                                ]?.message?.toString()}
                             </span>
                         ) : null}
                     </div>
@@ -161,7 +169,9 @@ function QuestionForm({
                     <div className="-my-1 mb-4 h-2">
                         {errors[`${questionNum}-answer-2`]?.message ? (
                             <span className="text-sm text-red-800">
-                                {errors[`${questionNum}-answer-2`].message}
+                                {errors[
+                                    `${questionNum}-answer-2`
+                                ]?.message?.toString()}
                             </span>
                         ) : null}
                     </div>
@@ -180,7 +190,9 @@ function QuestionForm({
                     <div className="-my-1 mb-4 h-2">
                         {errors[`${questionNum}-answer-3`]?.message ? (
                             <span className="text-sm text-red-800">
-                                {errors[`${questionNum}-answer-3`].message}
+                                {errors[
+                                    `${questionNum}-answer-3`
+                                ]?.message?.toString()}
                             </span>
                         ) : null}
                     </div>
@@ -192,30 +204,21 @@ function QuestionForm({
                     <select
                         defaultValue={question?.correctAnswer}
                         className="h-8 w-[25%] border-violet-800 bg-gray-100 outline-none focus:border-2"
-                        name="correctAnswer"
                         {...register(`${questionNum}-correctAnswer`, {
                             required: "This field is required.",
                         })}
                     >
                         <option value="0">
-                            {values[0] ||
-                                question?.answers?.at(0) ||
-                                "Option 1"}
+                            {values[0] || question?.answers[0] || "Option 1"}
                         </option>
                         <option value="1">
-                            {values[1] ||
-                                question?.answers?.at(1) ||
-                                "Option 2"}
+                            {values[1] || question?.answers[1] || "Option 2"}
                         </option>
                         <option value="2">
-                            {values[2] ||
-                                question?.answers?.at(2) ||
-                                "Option 3"}
+                            {values[2] || question?.answers[2] || "Option 3"}
                         </option>
                         <option value="3">
-                            {values[3] ||
-                                question?.answers?.at(3) ||
-                                "Option 4"}
+                            {values[3] || question?.answers[3] || "Option 4"}
                         </option>
                     </select>
                 </div>
