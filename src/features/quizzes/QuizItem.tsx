@@ -5,8 +5,9 @@ import Menus, { useMenus } from "../../ui/Menus.tsx"
 import Modal from "../../ui/Modal.tsx"
 import ConfirmDelete from "../../ui/ConfirmDelete.tsx"
 import CreateQuizForm from "../quiz/CreateQuizForm.tsx"
+import { Quiz } from "../../types/types.ts"
 
-function QuizItem({ quiz }) {
+function QuizItem({ quiz }: { quiz: Quiz }) {
     const { openId } = useMenus()
     const { startQuiz, deleteQuiz } = useQuizzes()
     const navigate = useNavigate()

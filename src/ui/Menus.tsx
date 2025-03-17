@@ -1,10 +1,25 @@
-import { createContext, useContext, useState } from "react"
+import {
+    createContext,
+    Dispatch,
+    FormEvent,
+    ReactNode,
+    SetStateAction,
+    useContext,
+    useState,
+} from "react"
 import { HiDotsVertical } from "react-icons/hi"
 import { useOutsideClick } from "../hooks/useOutsideClick"
+import { IconType } from "react-icons"
 
-const MenuContext = createContext()
+interface MenuContextType {
+    openId: string
+    open: Dispatch<SetStateAction<string>>
+    close: () => void
+}
 
-function Menus({ children }) {
+const MenuContext = createContext<MenuContextType | undefined>(undefined)
+
+function Menus({ children }: { children: ReactNode }) {
     const [openId, setOpenId] = useState("")
     const open = setOpenId
     const close = () => setOpenId("")
@@ -16,16 +31,20 @@ function Menus({ children }) {
     )
 }
 
-function Menu({ children }) {
+function Menu({ children }: { children: ReactNode }) {
     return children
 }
 
-function Toggle({ id }) {
-    const { open, close, openId } = useContext(MenuContext)
+function Toggle({ id }: { id: string }) {
+    const { open, close, openId } = useContext(MenuContext)!
 
-    function handleClick(e) {
+    function handleClick(e: FormEvent) {
         e.stopPropagation()
-        openId === "" || openId !== id ? open(id) : close()
+        if (openId === "" || openId !== id) {
+            open(id)
+        } else {
+            close()
+        }
     }
 
     return (
@@ -38,15 +57,14 @@ function Toggle({ id }) {
     )
 }
 
-function List({ id, children }) {
-    const { openId, close } = useContext(MenuContext)
+function List({ id, children }: { id: string; children: ReactNode }) {
+    const { openId, close } = useContext(MenuContext)!
     const ref = useOutsideClick(close, false)
-
     if (openId !== id) return null
 
     return (
         <ul
-            ref={ref}
+            ref={ref as React.Ref<HTMLUListElement>}
             className={`absolute right-[-8px] top-[60px] z-10 overflow-clip rounded-md bg-zinc-300 text-left shadow-md`}
         >
             {children}
@@ -54,8 +72,18 @@ function List({ id, children }) {
     )
 }
 
-function Button({ children, icon, onClick, disabled }) {
-    const { close } = useContext(MenuContext)
+function Button({
+    children,
+    icon: Icon,
+    onClick,
+    disabled,
+}: {
+    children: ReactNode
+    icon: IconType
+    onClick?: () => void
+    disabled?: boolean
+}) {
+    const { close } = useContext(MenuContext)!
 
     function handleClick() {
         onClick?.()
@@ -69,7 +97,7 @@ function Button({ children, icon, onClick, disabled }) {
                 onClick={handleClick}
                 className={`flex w-full items-center gap-4 px-[1.4rem] py-[0.7rem] transition-colors duration-150 hover:bg-zinc-200 disabled:text-zinc-400`}
             >
-                {icon}{" "}
+                {<Icon />}{" "}
                 <span
                     className={`${disabled ? "text-zinc-500" : "text-zinc-800"}`}
                 >

@@ -1,7 +1,8 @@
 import { useQuizzes } from "../../contexts/QuizzesContext"
 import Button from "../../ui/Button.tsx"
+import { Quiz } from "../../types/types.ts"
 
-function StartQuizWithId({ quiz }) {
+function StartQuizWithId({ quiz }: { quiz: Quiz }) {
     const { startQuiz } = useQuizzes()
     if (!quiz) return
 
