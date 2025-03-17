@@ -7,7 +7,7 @@ import { useQuizzes } from "../../contexts/QuizzesContext"
 import { Question, Quiz } from "../../types/types.ts"
 
 interface CreateQuizFormProps {
-    onCloseModal: () => void
+    onCloseModal?: () => void
     quiz: Quiz
 }
 

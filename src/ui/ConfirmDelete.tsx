@@ -1,4 +1,10 @@
-function ConfirmDelete({ onCloseModal, onConfirm }) {
+function ConfirmDelete({
+    onCloseModal,
+    onConfirm,
+}: {
+    onCloseModal?: () => void
+    onConfirm?: () => Promise<void>
+}) {
     return (
         <div className="flex max-h-[15rem] max-w-[40rem] flex-col gap-[1.2rem]">
             <h3 className="text-3xl font-bold">Delete Quiz</h3>
@@ -16,7 +22,7 @@ function ConfirmDelete({ onCloseModal, onConfirm }) {
                 <button
                     onClick={() => {
                         onConfirm?.()
-                        onCloseModal()
+                        onCloseModal?.()
                     }}
                     className="transition-color text-md rounded-md bg-red-700 px-[1.6rem] py-[0.8rem] font-bold text-gray-300 duration-200 hover:bg-red-800"
                 >

@@ -8,7 +8,7 @@ import CreateQuizForm from "../quiz/CreateQuizForm.tsx"
 import { Quiz } from "../../types/types.ts"
 
 function QuizItem({ quiz }: { quiz: Quiz }) {
-    const { openId } = useMenus()
+    const { openIqd } = useMenus()!
     const { startQuiz, deleteQuiz } = useQuizzes()
     const navigate = useNavigate()
 
@@ -17,7 +17,7 @@ function QuizItem({ quiz }: { quiz: Quiz }) {
 
     return (
         <li
-            className={`${openId === quiz.id ? "translate-x-[2px]" : "transition-transform duration-300 hover:translate-x-[2px]"} relative flex max-h-[12rem] max-w-full cursor-default flex-col items-start justify-center gap-1 rounded-md border bg-gray-300 p-8`}
+            className={`${Number(openId) === quiz.id ? "translate-x-[2px]" : "transition-transform duration-300 hover:translate-x-[2px]"} relative flex max-h-[12rem] max-w-full cursor-default flex-col items-start justify-center gap-1 rounded-md border bg-gray-300 p-8`}
             key={quiz.id}
         >
             <Modal>
@@ -38,13 +38,13 @@ function QuizItem({ quiz }: { quiz: Quiz }) {
                         Play
                     </button>
                     <div className="absolute right-3 top-4">
-                        <Menus.Toggle id={quiz.id} />
+                        <Menus.Toggle id={quiz.id.toString()} />
                     </div>
-                    <Menus.List id={quiz.id}>
+                    <Menus.List id={quiz.id.toString()}>
                         <Modal.Open opens="delete">
                             <Menus.Button
                                 disabled={isDeleteEditDisabled}
-                                icon={<HiTrash />}
+                                icon={HiTrash}
                             >
                                 Delete
                             </Menus.Button>
@@ -52,7 +52,7 @@ function QuizItem({ quiz }: { quiz: Quiz }) {
                         <Modal.Open opens="edit">
                             <Menus.Button
                                 disabled={isDeleteEditDisabled}
-                                icon={<HiPencil />}
+                                icon={HiPencil}
                             >
                                 Edit
                             </Menus.Button>
