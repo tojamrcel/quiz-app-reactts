@@ -8,7 +8,7 @@ import { Question, Quiz } from "../../types/types.ts"
 
 interface CreateQuizFormProps {
     onCloseModal?: () => void
-    quiz: Quiz
+    quiz?: Quiz
 }
 
 function CreateQuizForm({ onCloseModal, quiz }: CreateQuizFormProps) {
@@ -19,8 +19,8 @@ function CreateQuizForm({ onCloseModal, quiz }: CreateQuizFormProps) {
     const { errors } = formState
 
     const isEditing = Boolean(quiz)
-    const [questions, setQuestions] = useState(
-        isEditing ? quiz.questions.length : 1,
+    const [questions, setQuestions] = useState<number>(
+        isEditing ? Number(quiz?.questions.length) : 1,
     )
 
     // console.log(quiz.questions)
@@ -54,7 +54,7 @@ function CreateQuizForm({ onCloseModal, quiz }: CreateQuizFormProps) {
             newQuizQuestions.push(question)
         })
 
-        if (isEditing) {
+        if (isEditing && quiz) {
             const newQuiz = {
                 ...quiz,
                 description: values.description,
@@ -62,7 +62,6 @@ function CreateQuizForm({ onCloseModal, quiz }: CreateQuizFormProps) {
                 author: values.author || "anonymous",
                 questions: [...newQuizQuestions],
             }
-            console.log(newQuiz)
             editQuiz(newQuiz)
         }
 
@@ -103,7 +102,7 @@ function CreateQuizForm({ onCloseModal, quiz }: CreateQuizFormProps) {
                         Title
                     </label>
                     <Input
-                        defaultValue={isEditing ? quiz.title : ""}
+                        defaultValue={isEditing ? quiz?.title : ""}
                         register={register("title", {
                             required: "Title is required.",
                             maxLength: {
@@ -129,8 +128,8 @@ function CreateQuizForm({ onCloseModal, quiz }: CreateQuizFormProps) {
                     <Input
                         defaultValue={
                             isEditing
-                                ? quiz.author !== "anonymous"
-                                    ? quiz.author
+                                ? quiz?.author !== "anonymous"
+                                    ? quiz?.author
                                     : ""
                                 : ""
                         }
@@ -142,7 +141,7 @@ function CreateQuizForm({ onCloseModal, quiz }: CreateQuizFormProps) {
                         Description
                     </label>
                     <Input
-                        defaultValue={isEditing ? quiz.description : ""}
+                        defaultValue={isEditing ? quiz?.description : ""}
                         register={register("description", {
                             required: "Description is required.",
                             maxLength: {
@@ -176,7 +175,7 @@ function CreateQuizForm({ onCloseModal, quiz }: CreateQuizFormProps) {
                             (_, i) => (
                                 <QuestionForm
                                     question={
-                                        isEditing ? quiz.questions[i] : null
+                                        isEditing ? quiz?.questions[i] : null
                                     }
                                     control={control}
                                     key={i}

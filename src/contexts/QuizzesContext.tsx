@@ -28,7 +28,7 @@ const QuizzesContext = createContext<QuizzesContextType | undefined>(undefined)
 
 const quizzesArray = [
     {
-        id: "1",
+        id: 1,
         title: "Science Quiz",
         author: "Marcel G",
         description: "Quiz about science things.",
@@ -112,7 +112,7 @@ const quizzesArray = [
         ],
     },
     {
-        id: "2",
+        id: 2,
         title: "History Quiz.",
         author: "hello123",
         description: "Quiz about history things.",
@@ -213,7 +213,7 @@ const quizzesArray = [
         ],
     },
     {
-        id: "3",
+        id: 3,
         title: "Literature Quiz.",
         author: "test321",
         description: "Quiz about literature.",

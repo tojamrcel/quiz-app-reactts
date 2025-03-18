@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react"
+import { Quiz } from "../types/types"
 
-export function useLocalStorage(initialState, key) {
+export function useLocalStorage(initialState: Quiz[], key: string) {
     const [value, setValue] = useState(() => {
         const storedValue = localStorage.getItem(key)
         return storedValue ? JSON.parse(storedValue) : initialState

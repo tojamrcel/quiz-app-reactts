@@ -12,7 +12,7 @@ import {
 import { Question } from "../../types/types.ts"
 
 interface QuestionFormProps {
-    question: Question | null
+    question: Question | null | undefined
     questionNum: number
     register: UseFormRegister<FieldValues>
     errors: FieldErrors
