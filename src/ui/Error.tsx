@@ -1,7 +1,7 @@
 import { useNavigate } from "react-router-dom"
 import Button from "./Button.tsx"
 
-function Error({ message }) {
+function Error({ message }: { message: string }) {
     const navigate = useNavigate()
 
     return (
